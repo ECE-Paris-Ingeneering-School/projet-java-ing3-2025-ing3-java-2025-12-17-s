@@ -1,11 +1,9 @@
 # IntelliJ
 .idea/
 *.iml
-*.iws
 
-# System
-.DS_Store
-Thumbs.db
+# Java
+*.class
 
 # Build
 /out/
@@ -16,18 +14,9 @@ build/
 *.log
 
 # OS
-*.swp
+.DS_Store
+Thumbs.db
 
-# Java
-*.class
-
-# Maven
+# Maven / Gradle
 .mvn/
-!**/src/main/**/mvn-wrapper.properties
-
-# Gradle
 .gradle/
-build/
-
-# Others
-*.jar
