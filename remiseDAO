@@ -1,0 +1,50 @@
+import java.sql.*;
+
+public class RemiseDAO {
+
+    public void ajouterRemise(Remise remise) {
+        String query = "INSERT INTO remise (id_article, description, pourcentage, date_debut, date_fin) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setInt(1, remise.getIdArticle());
+            ps.setString(2, remise.getDescription());
+            ps.setInt(3, remise.getPourcentage());
+            ps.setDate(4, new java.sql.Date(remise.getDateDebut().getTime()));
+            ps.setDate(5, new java.sql.Date(remise.getDateFin().getTime()));
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Remise getRemiseByArticle(int idArticle) {
+        String query = "SELECT * FROM remise WHERE id_article = ?";
+        Remise remise = null;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setInt(1, idArticle);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                remise = new Remise(
+                    rs.getInt("id"),
+                    rs.getInt("id_article"),
+                    rs.getString("description"),
+                    rs.getInt("pourcentage"),
+                    rs.getDate("date_debut"),
+                    rs.getDate("date_fin")
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return remise;
+    }
+}
