@@ -1,0 +1,63 @@
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CommandeDAO {
+
+    public void ajouterCommande(Commande commande) {
+        String query = "INSERT INTO commande (id_utilisateur, statut) VALUES (?, ?)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setInt(1, commande.getIdUtilisateur());
+            ps.setString(2, commande.getStatut());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Commande> getCommandesByUtilisateur(int idUtilisateur) {
+        String query = "SELECT * FROM commande WHERE id_utilisateur = ?";
+        List<Commande> commandes = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setInt(1, idUtilisateur);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Commande commande = new Commande(
+                    rs.getInt("id"),
+                    rs.getInt("id_utilisateur"),
+                    rs.getDate("date_commande"),
+                    rs.getString("statut")
+                );
+                commandes.add(commande);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return commandes;
+    }
+
+    public void mettreAJourStatutCommande(int idCommande, String statut) {
+        String query = "UPDATE commande SET statut = ? WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setString(1, statut);
+            ps.setInt(2, idCommande);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
