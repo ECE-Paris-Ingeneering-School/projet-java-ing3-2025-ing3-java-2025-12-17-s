@@ -1,0 +1,150 @@
+// Fichier : model/Article.java
+package model;
+
+public class Article {
+    private int id;
+    private String nom;
+    private String marque;
+    private double prixUnitaire;
+    private Double prixVrac;
+    private Integer quantiteVrac;
+    private int stock;
+
+    public Article(int id, String nom, String marque, double prixUnitaire, Double prixVrac, Integer quantiteVrac, int stock) {
+        this.id = id;
+        this.nom = nom;
+        this.marque = marque;
+        this.prixUnitaire = prixUnitaire;
+        this.prixVrac = prixVrac;
+        this.quantiteVrac = quantiteVrac;
+        this.stock = stock;
+    }
+
+    // Getters et Setters
+    public int getId() { return id; }
+    public String getNom() { return nom; }
+    public String getMarque() { return marque; }
+    public double getPrixUnitaire() { return prixUnitaire; }
+    public Double getPrixVrac() { return prixVrac; }
+    public Integer getQuantiteVrac() { return quantiteVrac; }
+    public int getStock() { return stock; }
+
+    public void setId(int id) { this.id = id; }
+    public void setNom(String nom) { this.nom = nom; }
+    public void setMarque(String marque) { this.marque = marque; }
+    public void setPrixUnitaire(double prixUnitaire) { this.prixUnitaire = prixUnitaire; }
+    public void setPrixVrac(Double prixVrac) { this.prixVrac = prixVrac; }
+    public void setQuantiteVrac(Integer quantiteVrac) { this.quantiteVrac = quantiteVrac; }
+    public void setStock(int stock) { this.stock = stock; }
+} 
+
+// Fichier : model/Utilisateur.java
+package model;
+
+public class Utilisateur {
+    private int id;
+    private String nom;
+    private String email;
+    private String motDePasse;
+    private String type; // "client" ou "admin"
+
+    public Utilisateur(int id, String nom, String email, String motDePasse, String type) {
+        this.id = id;
+        this.nom = nom;
+        this.email = email;
+        this.motDePasse = motDePasse;
+        this.type = type;
+    }
+
+    // Getters et Setters
+    public int getId() { return id; }
+    public String getNom() { return nom; }
+    public String getEmail() { return email; }
+    public String getMotDePasse() { return motDePasse; }
+    public String getType() { return type; }
+
+    public void setId(int id) { this.id = id; }
+    public void setNom(String nom) { this.nom = nom; }
+    public void setEmail(String email) { this.email = email; }
+    public void setMotDePasse(String motDePasse) { this.motDePasse = motDePasse; }
+    public void setType(String type) { this.type = type; }
+}
+
+// Fichier : utils/DataBaseConnection.java
+package utils;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DataBaseConnection {
+    private static final String URL = "jdbc:mysql://localhost:3306/shopping";
+    private static final String USER = "root";
+    private static final String PASSWORD = ""; // à adapter selon ta config
+
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER, PASSWORD);
+    }
+} 
+
+// Fichier : dao/ArticleDAO.java
+package dao;
+
+import model.Article;
+import utils.DataBaseConnection;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ArticleDAO {
+
+    public List<Article> getAllArticles() {
+        List<Article> articles = new ArrayList<>();
+        String query = "SELECT * FROM article";
+
+        try (Connection conn = DataBaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            while (rs.next()) {
+                Article article = new Article(
+                        rs.getInt("id"),
+                        rs.getString("nom"),
+                        rs.getString("marque"),
+                        rs.getDouble("prix_unitaire"),
+                        rs.getObject("prix_vrac", Double.class),
+                        rs.getObject("quantite_vrac", Integer.class),
+                        rs.getInt("stock")
+                );
+                articles.add(article);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return articles;
+    }
+
+    public Article getArticleById(int id) {
+        String query = "SELECT * FROM article WHERE id = ?";
+        try (Connection conn = DataBaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return new Article(
+                        rs.getInt("id"),
+                        rs.getString("nom"),
+                        rs.getString("marque"),
+                        rs.getDouble("prix_unitaire"),
+                        rs.getObject("prix_vrac", Double.class),
+                        rs.getObject("quantite_vrac", Integer.class),
+                        rs.getInt("stock")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+} 
