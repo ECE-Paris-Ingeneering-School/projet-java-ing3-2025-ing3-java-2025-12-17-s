@@ -90,4 +90,29 @@ public class LigneCommandeDAOImpl implements LigneCommandeDAO {
             return false;
         }
     }
+
+    @Override
+    public List<LigneCommande> getToutesLesLignesCommandes() {
+        List<LigneCommande> lignes = new ArrayList<>();
+        String sql = "SELECT * FROM ligne_commande";
+
+        try (Connection conn = ConnexionBDD.getConnexion();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                LigneCommande lc = new LigneCommande(
+                        rs.getInt("id_commande"),
+                        rs.getInt("id_article"),
+                        rs.getInt("quantite")
+                );
+                lignes.add(lc);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erreur récupération de toutes les lignes de commande : " + e.getMessage());
+        }
+
+        return lignes;
+    }
 }

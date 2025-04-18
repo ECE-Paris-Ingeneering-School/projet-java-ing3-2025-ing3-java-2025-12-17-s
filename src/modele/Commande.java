@@ -17,6 +17,12 @@ public class Commande {
         this.dateCommande = dateCommande;
         this.statut = statut;
     }
+    public Commande(int idUtilisateur, LocalDateTime dateCommande, String statut) {
+        this.idUtilisateur = idUtilisateur;
+        this.dateCommande = dateCommande;
+        this.statut = statut;
+    }
+
 
     // Getter pour id
     public int getId() {

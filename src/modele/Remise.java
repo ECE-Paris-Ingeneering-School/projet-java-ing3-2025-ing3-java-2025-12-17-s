@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public class Remise {
     private int id;
     private int idArticle;
-    private String description;
+    private String code;
     private int pourcentage; // entre 0 et 100
     private LocalDate dateDebut;
     private LocalDate dateFin;
@@ -16,10 +16,10 @@ public class Remise {
     /**
      * Constructeur complet
      */
-    public Remise(int id, int idArticle, String description, int pourcentage, LocalDate dateDebut, LocalDate dateFin) {
+    public Remise(int id, int idArticle, String code, int pourcentage, LocalDate dateDebut, LocalDate dateFin) {
         this.id = id;
         this.idArticle = idArticle;
-        this.description = description;
+        this.code = code;
         this.pourcentage = pourcentage;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
@@ -28,9 +28,9 @@ public class Remise {
     /**
      * Constructeur sans ID (insertion)
      */
-    public Remise(int idArticle, String description, int pourcentage, LocalDate dateDebut, LocalDate dateFin) {
+    public Remise(int idArticle, String code, int pourcentage, LocalDate dateDebut, LocalDate dateFin) {
         this.idArticle = idArticle;
-        this.description = description;
+        this.code = code;
         this.pourcentage = pourcentage;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
@@ -43,8 +43,8 @@ public class Remise {
     public int getIdArticle() { return idArticle; }
     public void setIdArticle(int idArticle) { this.idArticle = idArticle; }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getCode() { return code; }
+    public void setCode(String code) { this.code = code; }
 
     public int getPourcentage() { return pourcentage; }
     public void setPourcentage(int pourcentage) { this.pourcentage = pourcentage; }
@@ -57,6 +57,6 @@ public class Remise {
 
     @Override
     public String toString() {
-        return description + " (-" + pourcentage + "% du " + dateDebut + " au " + dateFin + ")";
+        return code + " (-" + pourcentage + "% du " + dateDebut + " au " + dateFin + ")";
     }
 }

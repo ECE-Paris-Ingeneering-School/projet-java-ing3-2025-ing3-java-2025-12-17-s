@@ -4,6 +4,7 @@ import dao.CommandeDAOImpl;
 import dao.LigneCommandeDAOImpl;
 import modele.Commande;
 import modele.LigneCommande;
+import javax.swing.JFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Vue de la validation de commande
  */
-public class ValidationCommandeView {
+public class ValidationCommandeView extends JFrame {
 
     private JFrame frame;
     private List<String> panierArticles;

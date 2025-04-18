@@ -5,65 +5,64 @@ import modele.Utilisateur;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-/**
- * Vue de la connexion pour les utilisateurs
- */
-public class ConnexionView {
+public class ConnexionView extends JFrame {
 
-    private JFrame frame;
     private JTextField emailField;
     private JPasswordField motDePasseField;
 
     public ConnexionView() {
-        frame = new JFrame("Connexion");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
-        frame.setLayout(new GridLayout(4, 2));
+        setTitle("Connexion");
+        setSize(400, 300);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
 
-        // Titre
-        JLabel titleLabel = new JLabel("Connexion", JLabel.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        frame.add(titleLabel);
+        JLabel titre = new JLabel("Se connecter");
+        titre.setFont(new Font("Arial", Font.BOLD, 22));
+        titre.setHorizontalAlignment(SwingConstants.CENTER);
+        add(titre, BorderLayout.NORTH);
 
-        // Email
-        JLabel emailLabel = new JLabel("Email:");
+        JPanel formPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+
+        formPanel.add(new JLabel("Email :"));
         emailField = new JTextField();
-        frame.add(emailLabel);
-        frame.add(emailField);
+        formPanel.add(emailField);
 
-        // Mot de passe
-        JLabel motDePasseLabel = new JLabel("Mot de passe:");
+        formPanel.add(new JLabel("Mot de passe :"));
         motDePasseField = new JPasswordField();
-        frame.add(motDePasseLabel);
-        frame.add(motDePasseField);
+        formPanel.add(motDePasseField);
 
-        // Bouton de connexion
-        JButton loginButton = new JButton("Se connecter");
-        frame.add(new JLabel()); // Empty label for spacing
-        frame.add(loginButton);
+        JButton btnConnexion = new JButton("Connexion");
+        formPanel.add(new JLabel()); // espace vide
+        formPanel.add(btnConnexion);
 
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String email = emailField.getText();
-                String motDePasse = new String(motDePasseField.getPassword());
+        add(formPanel, BorderLayout.CENTER);
 
-                UtilisateurDAOImpl utilisateurDAO = new UtilisateurDAOImpl();
-                Utilisateur utilisateur = utilisateurDAO.getUtilisateurParEmailEtMotDePasse(email, motDePasse);
+        btnConnexion.addActionListener(e -> {
+            String email = emailField.getText();
+            String mdp = new String(motDePasseField.getPassword());
 
-                if (utilisateur != null) {
-                    JOptionPane.showMessageDialog(frame, "Bienvenue, " + utilisateur.getNom() + " !");
-                    // Pour la suite, rediriger vers le catalogue, par exemple.
+            UtilisateurDAOImpl utilisateurDAO = new UtilisateurDAOImpl();
+            Utilisateur utilisateur = utilisateurDAO.getUtilisateurParEmailEtMotDePasse(email, mdp);
+
+            if (utilisateur != null) {
+                JOptionPane.showMessageDialog(this, "Bienvenue " + utilisateur.getPrenom() + " !");
+                dispose(); // ferme la fenêtre de connexion
+
+                if (utilisateur.getRole().equalsIgnoreCase("admin")) {
+                    new FenetreAdmin(utilisateur.getNom());
                 } else {
-                    JOptionPane.showMessageDialog(frame, "Identifiants incorrects !", "Erreur", JOptionPane.ERROR_MESSAGE);
+                    new FenetreClient(utilisateur.getId());
                 }
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Identifiants incorrects", "Erreur", JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        frame.setVisible(true);
+        setVisible(true);
     }
 
     public static void main(String[] args) {

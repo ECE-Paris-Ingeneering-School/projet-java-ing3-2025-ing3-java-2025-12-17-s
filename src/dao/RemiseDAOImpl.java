@@ -13,13 +13,13 @@ public class RemiseDAOImpl implements RemiseDAO {
 
     @Override
     public boolean ajouterRemise(Remise remise) {
-        String sql = "INSERT INTO remise (id_article, description, pourcentage, date_debut, date_fin) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO remise (id_article, code, pourcentage, date_debut, date_fin) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = ConnexionBDD.getConnexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, remise.getIdArticle());
-            ps.setString(2, remise.getDescription());
+            ps.setString(2, remise.getCode());
             ps.setInt(3, remise.getPourcentage());
             ps.setDate(4, Date.valueOf(remise.getDateDebut()));
             ps.setDate(5, Date.valueOf(remise.getDateFin()));
@@ -34,13 +34,13 @@ public class RemiseDAOImpl implements RemiseDAO {
 
     @Override
     public boolean modifierRemise(Remise remise) {
-        String sql = "UPDATE remise SET id_article = ?, description = ?, pourcentage = ?, date_debut = ?, date_fin = ? WHERE id = ?";
+        String sql = "UPDATE remise SET id_article = ?, code = ?, pourcentage = ?, date_debut = ?, date_fin = ? WHERE id = ?";
 
         try (Connection conn = ConnexionBDD.getConnexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, remise.getIdArticle());
-            ps.setString(2, remise.getDescription());
+            ps.setString(2, remise.getCode());
             ps.setInt(3, remise.getPourcentage());
             ps.setDate(4, Date.valueOf(remise.getDateDebut()));
             ps.setDate(5, Date.valueOf(remise.getDateFin()));
@@ -84,7 +84,7 @@ public class RemiseDAOImpl implements RemiseDAO {
                 return new Remise(
                         rs.getInt("id"),
                         rs.getInt("id_article"),
-                        rs.getString("description"),
+                        rs.getString("code"),
                         rs.getInt("pourcentage"),
                         rs.getDate("date_debut").toLocalDate(),
                         rs.getDate("date_fin").toLocalDate()
@@ -110,7 +110,7 @@ public class RemiseDAOImpl implements RemiseDAO {
                 Remise r = new Remise(
                         rs.getInt("id"),
                         rs.getInt("id_article"),
-                        rs.getString("description"),
+                        rs.getString("code"),
                         rs.getInt("pourcentage"),
                         rs.getDate("date_debut").toLocalDate(),
                         rs.getDate("date_fin").toLocalDate()
@@ -140,7 +140,7 @@ public class RemiseDAOImpl implements RemiseDAO {
                 Remise r = new Remise(
                         rs.getInt("id"),
                         rs.getInt("id_article"),
-                        rs.getString("description"),
+                        rs.getString("code"),
                         rs.getInt("pourcentage"),
                         rs.getDate("date_debut").toLocalDate(),
                         rs.getDate("date_fin").toLocalDate()
