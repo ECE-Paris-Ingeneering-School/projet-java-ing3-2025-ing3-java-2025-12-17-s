@@ -1,0 +1,60 @@
+// (Les classes précédentes restent inchangées...)
+
+// Fichier : dao/CommandeDAO.java
+package dao;
+
+import model.Commande;
+import utils.DataBaseConnection;
+
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CommandeDAO {
+
+    public void createCommande(Commande commande) {
+        String query = "INSERT INTO commande (id_utilisateur, date_commande, statut) VALUES (?, ?, ?)";
+
+        try (Connection conn = DataBaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+
+            pstmt.setInt(1, commande.getIdUtilisateur());
+            pstmt.setTimestamp(2, Timestamp.valueOf(commande.getDateCommande()));
+            pstmt.setString(3, commande.getStatut());
+            pstmt.executeUpdate();
+
+            ResultSet rs = pstmt.getGeneratedKeys();
+            if (rs.next()) {
+                commande.setId(rs.getInt(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Commande> getCommandesByUtilisateur(int idUtilisateur) {
+        List<Commande> commandes = new ArrayList<>();
+        String query = "SELECT * FROM commande WHERE id_utilisateur = ? ORDER BY date_commande DESC";
+
+        try (Connection conn = DataBaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, idUtilisateur);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Commande commande = new Commande(
+                    rs.getInt("id"),
+                    rs.getInt("id_utilisateur"),
+                    rs.getTimestamp("date_commande").toLocalDateTime(),
+                    rs.getString("statut")
+                );
+                commandes.add(commande);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return commandes;
+    }
+} 
