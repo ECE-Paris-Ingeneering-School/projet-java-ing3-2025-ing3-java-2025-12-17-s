@@ -1,0 +1,19 @@
+import javax.swing.*;
+import java.awt.*;
+
+    public class ChartGenerator extends JPanel {
+
+        public ChartGenerator() {
+        }
+
+        // Méthode de test rapide
+        public static void main(String[] args) {
+            JFrame frame = new JFrame("Statistiques Admin");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(800, 400);
+            frame.setLocationRelativeTo(null);
+            frame.setContentPane(new ChartGenerator());
+            frame.setVisible(true);
+        }
+    }
+
