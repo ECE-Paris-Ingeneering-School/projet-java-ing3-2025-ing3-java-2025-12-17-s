@@ -1,0 +1,52 @@
+// Fichier : model/Commande.java
+package model;
+
+import java.time.LocalDateTime;
+
+public class Commande {
+    private int id;
+    private int idUtilisateur;
+    private LocalDateTime dateCommande;
+    private String statut; // "en cours" ou "terminée"
+
+    public Commande(int id, int idUtilisateur, LocalDateTime dateCommande, String statut) {
+        this.id = id;
+        this.idUtilisateur = idUtilisateur;
+        this.dateCommande = dateCommande;
+        this.statut = statut;
+    }
+
+    // Getters
+    public int getId() {
+        return id;
+    }
+
+    public int getIdUtilisateur() {
+        return idUtilisateur;
+    }
+
+    public LocalDateTime getDateCommande() {
+        return dateCommande;
+    }
+
+    public String getStatut() {
+        return statut;
+    }
+
+    // Setters
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setIdUtilisateur(int idUtilisateur) {
+        this.idUtilisateur = idUtilisateur;
+    }
+
+    public void setDateCommande(LocalDateTime dateCommande) {
+        this.dateCommande = dateCommande;
+    }
+
+    public void setStatut(String statut) {
+        this.statut = statut;
+    }
+}
