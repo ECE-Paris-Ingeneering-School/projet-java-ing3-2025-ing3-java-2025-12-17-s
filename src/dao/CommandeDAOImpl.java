@@ -17,13 +17,21 @@ public class CommandeDAOImpl implements CommandeDAO {
         String sql = "INSERT INTO commande (id_utilisateur, date_commande, statut) VALUES (?, ?, ?)";
 
         try (Connection conn = ConnexionBDD.getConnexion();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setInt(1, commande.getIdUtilisateur());
             ps.setTimestamp(2, Timestamp.valueOf(commande.getDateCommande()));
             ps.setString(3, commande.getStatut());
 
-            return ps.executeUpdate() > 0;
+            int result = ps.executeUpdate();
+
+            // Récupération de l'ID généré pour la commande
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                commande.setId(rs.getInt(1));
+            }
+
+            return result > 0;
 
         } catch (SQLException e) {
             System.err.println("Erreur ajout commande : " + e.getMessage());

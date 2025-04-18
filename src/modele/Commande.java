@@ -42,4 +42,7 @@ public class Commande {
     public void setStatut(String statut) {
         this.statut = statut;
     }
+    public void setId(int id) {
+        this.id = id;
+    }
 }
