@@ -1,0 +1,43 @@
+public class CommandeDAO {
+
+    public void enregistrerCommande(Commande commande) {
+        String queryCommande = "INSERT INTO commande (id_utilisateur, date_commande, statut) VALUES (?, ?, ?)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement psCommande = conn.prepareStatement(queryCommande, Statement.RETURN_GENERATED_KEYS)) {
+
+            psCommande.setInt(1, commande.getIdUtilisateur());
+            psCommande.setDate(2, new java.sql.Date(commande.getDateCommande().getTime()));
+            psCommande.setString(3, "en cours"); // Statut initial
+            psCommande.executeUpdate();
+
+            // Récupérer l'ID de la commande insérée
+            ResultSet rs = psCommande.getGeneratedKeys();
+            if (rs.next()) {
+                int idCommande = rs.getInt(1);
+
+                // Enregistrer les lignes de commande
+                for (LigneCommande ligne : commande.getLignesCommande()) {
+                    enregistrerLigneCommande(idCommande, ligne);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void enregistrerLigneCommande(int idCommande, LigneCommande ligne) {
+        String queryLigne = "INSERT INTO ligne_commande (id_commande, id_article, quantite) VALUES (?, ?, ?)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement psLigne = conn.prepareStatement(queryLigne)) {
+
+            psLigne.setInt(1, idCommande);
+            psLigne.setInt(2, ligne.getIdArticle());
+            psLigne.setInt(3, ligne.getQuantite());
+            psLigne.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
