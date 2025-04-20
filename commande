@@ -1,0 +1,39 @@
+public class Commande {
+    private int id;
+    private int idUtilisateur;
+    private Date dateCommande;
+    private String statut;
+    private List<LigneCommande> lignesCommande;
+
+    // Calculer le total d'une commande avec les remises appliquées
+    public double calculerTotal() {
+        double total = 0.0;
+
+        for (LigneCommande ligne : lignesCommande) {
+            Article article = ligne.getArticle();
+            double prixArticle = article.getPrixUnitaire();
+            int quantite = ligne.getQuantite();
+
+            // Vérifier si une remise est appliquée à l'article
+            Remise remise = getRemiseForArticle(article);
+            if (remise != null) {
+                // Appliquer la remise
+                double pourcentageRemise = remise.getPourcentage();
+                prixArticle = prixArticle - (prixArticle * (pourcentageRemise / 100));
+            }
+
+            // Ajouter le prix de l'article multiplié par la quantité au total
+            total += prixArticle * quantite;
+        }
+
+        return total;
+    }
+
+    // Récupérer la remise applicable pour un article
+    private Remise getRemiseForArticle(Article article) {
+        // Logique pour obtenir la remise d'un article (par exemple, depuis la base de données)
+        // Ici, il s'agit d'un simple exemple
+        RemiseDAO remiseDAO = new RemiseDAO();
+        return remiseDAO.getRemiseByArticle(article.getId());
+    }
+}
