@@ -1,0 +1,29 @@
+import java.io.*;
+
+public class LectureFichier {
+    public void lireFichier(String nomFichier) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(nomFichier));
+            String ligne;
+            while ((ligne = reader.readLine()) != null) {
+                System.out.println(ligne);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Erreur : Le fichier '" + nomFichier + "' est introuvable.");
+        } catch (IOException e) {
+            System.out.println("Erreur lors de la lecture du fichier.");
+        } finally {
+            // Fermeture du fichier, qu'il y ait une exception ou non
+            try {
+                if (reader != null) {
+                    reader.close();
+                    System.out.println("Fichier fermé correctement.");
+                }
+            } catch (IOException e) {
+                System.out.println("Erreur lors de la fermeture du fichier.");
+            }
+        }
+    }
+}
+
