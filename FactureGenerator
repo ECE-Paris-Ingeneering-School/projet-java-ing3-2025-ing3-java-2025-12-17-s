@@ -1,0 +1,59 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+
+public class FactureGenerator {
+
+    public static void genererFacture(String nomClient, int idCommande, List<LigneCommande> lignes, double total, String dateCommande) {
+        String nomFichier = "Facture_Commande_" + idCommande + ".txt";
+
+        try (FileWriter writer = new FileWriter(nomFichier)) {
+            writer.write("========= FACTURE =========\n");
+            writer.write("Commande n°: " + idCommande + "\n");
+            writer.write("Client     : " + nomClient + "\n");
+            writer.write("Date       : " + dateCommande + "\n");
+            writer.write("===========================\n\n");
+
+            writer.write(String.format("%-20s %-10s %-10s %-10s\n", "Produit", "Qté", "PU (€)", "Total (€)"));
+            writer.write("----------------------------------------------------------\n");
+
+            for (LigneCommande ligne : lignes) {
+                double sousTotal = ligne.quantite * ligne.prixUnitaire;
+                writer.write(String.format("%-20s %-10d %-10.2f %-10.2f\n",
+                        ligne.nomProduit, ligne.quantite, ligne.prixUnitaire, sousTotal));
+            }
+
+            writer.write("\n----------------------------------------------------------\n");
+            writer.write(String.format("Total à payer : %.2f €\n", total));
+            writer.write("===========================\n");
+            writer.write("Merci pour votre achat !");
+
+            System.out.println("✅ Facture générée : " + nomFichier);
+        } catch (IOException e) {
+            System.err.println("❌ Erreur de génération de la facture : " + e.getMessage());
+        }
+    }
+
+    // Classe interne pour représenter une ligne de commande
+    public static class LigneCommande {
+        public String nomProduit;
+        public int quantite;
+        public double prixUnitaire;
+
+        public LigneCommande(String nomProduit, int quantite, double prixUnitaire) {
+            this.nomProduit = nomProduit;
+            this.quantite = quantite;
+            this.prixUnitaire = prixUnitaire;
+        }
+    }
+
+    // Méthode de test
+    public static void main(String[] args) {
+        List<LigneCommande> lignes = List.of(
+                new LigneCommande("Briquet", 12, 0.5),
+                new LigneCommande("Cahier A4", 3, 2.0),
+                new LigneCommande("Stylo", 5, 1.2)
+        );
+        genererFacture("Jean Dupont", 12345, lignes, 18.1, "2025-04-18");
+    }
+}
