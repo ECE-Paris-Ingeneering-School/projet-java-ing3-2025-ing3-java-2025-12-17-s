@@ -1,0 +1,75 @@
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.List;
+
+public class MainApp extends JFrame {
+
+    private JTable table;
+    private JButton btnGenererFacture;
+
+    public MainApp() {
+        setTitle("Panneau de contrôle Admin");
+        setSize(1000, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        JTabbedPane tabs = new JTabbedPane();
+
+        tabs.add(" Commandes", buildCommandesPanel());
+        tabs.add(" Statistiques", new ChartGenerator());
+
+        setContentPane(tabs);
+    }
+
+    private JPanel buildCommandesPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+
+        String[] columns = {"ID", "Client", "Date", "Total (€)"};
+        Object[][] data = {
+                {101, "Alice", "2025-04-15", 25.60},
+                {102, "Bob", "2025-04-16", 42.00},
+                {103, "Claire", "2025-04-17", 18.30},
+        };
+
+        table = new JTable(new DefaultTableModel(data, columns));
+        JScrollPane scrollPane = new JScrollPane(table);
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        // Bouton de génération de facture
+        btnGenererFacture = new JButton(" Générer la facture sélectionnée");
+        btnGenererFacture.addActionListener(e -> genererFactureDepuisTable());
+        panel.add(btnGenererFacture, BorderLayout.SOUTH);
+
+        return panel;
+    }
+
+    private void genererFactureDepuisTable() {
+        int selected = table.getSelectedRow();
+        if (selected == -1) {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner une commande.", "Avertissement", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int idCommande = (int) table.getValueAt(selected, 0);
+        String client = (String) table.getValueAt(selected, 1);
+        String date = (String) table.getValueAt(selected, 2);
+        double total = (double) table.getValueAt(selected, 3);
+
+        // Exemple : données simulées
+        List<LigneCommande> lignes = List.of(
+                new LigneCommande("Stylo", 3, 1.2),
+                new LigneCommande("Cahier", 2, 2.5),
+                new LigneCommande("Gomme", 1, 0.8)
+        );
+
+        FactureGenerator.genererFacture(client, idCommande, lignes, total, date);
+        JOptionPane.showMessageDialog(this, " Facture générée pour " + client + " !");
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new MainApp().setVisible(true);
+        });
+    }
+}
