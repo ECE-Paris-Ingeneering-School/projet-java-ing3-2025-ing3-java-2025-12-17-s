@@ -25,4 +25,8 @@ public interface RemiseDAO {
 
     // Obtenir les remises d'un article
     List<Remise> getRemisesParArticle(int idArticle);
+
+    // 🔥 Obtenir une remise via un code promo
+    Remise getRemiseParCode(String code);
+    Remise getRemiseValide(String code);
 }

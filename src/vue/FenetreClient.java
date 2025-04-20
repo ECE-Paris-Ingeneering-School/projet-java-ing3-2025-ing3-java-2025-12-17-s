@@ -30,24 +30,28 @@ public class FenetreClient extends JFrame {
 
         add(panel);
 
-        // Actions des boutons
+        // Action pour consulter le catalogue
         btnCatalogue.addActionListener(e -> {
-            new CatalogueView();  // tu pourras lui passer l'idUtilisateur si nécessaire
+            new CatalogueView(idUtilisateur);  // tu pourras lui passer l'idUtilisateur si nécessaire
         });
 
+        // Action pour voir les commandes
         btnCommandes.addActionListener(e -> {
             new FenetreCommandes(idUtilisateur).setVisible(true);
         });
 
+        // Action pour voir le panier
         btnPanier.addActionListener(e -> {
-            // à créer ensuite : FenetrePanier
-            JOptionPane.showMessageDialog(this, "Fenêtre panier à implémenter.");
+            new FenetrePanier(idUtilisateur);  // remplace le message par la vraie fenêtre
         });
 
+        // Action pour se déconnecter
         btnDeconnexion.addActionListener(e -> {
             dispose(); // Ferme la fenêtre actuelle
             new ConnexionView(); // Retour à la connexion
         });
+
+        setVisible(true); // n'oublie pas d'afficher la fenêtre !
     }
 
     public static void main(String[] args) {

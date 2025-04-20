@@ -5,6 +5,7 @@ import modele.Remise;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
 
 /**
  * Implémentation DAO pour la gestion des remises
@@ -153,5 +154,62 @@ public class RemiseDAOImpl implements RemiseDAO {
         }
 
         return remises;
+    }
+
+    @Override
+    public Remise getRemiseParCode(String code) {
+        String sql = "SELECT * FROM remise WHERE code = ?";
+
+        try (Connection conn = ConnexionBDD.getConnexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, code);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new Remise(
+                        rs.getInt("id"),
+                        rs.getInt("id_article"),
+                        rs.getString("code"),
+                        rs.getInt("pourcentage"),
+                        rs.getDate("date_debut").toLocalDate(),
+                        rs.getDate("date_fin").toLocalDate()
+                );
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erreur récupération remise par code : " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    // ✅ AJOUT : méthode pour vérification d’un code promo valide
+    @Override
+    public Remise getRemiseValide(String code) {
+        String sql = "SELECT * FROM remise WHERE code = ? AND date_fin >= ?";
+        try (Connection conn = ConnexionBDD.getConnexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, code);
+            ps.setDate(2, Date.valueOf(LocalDate.now()));
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new Remise(
+                        rs.getInt("id"),
+                        rs.getInt("id_article"),
+                        rs.getString("code"),
+                        rs.getInt("pourcentage"),
+                        rs.getDate("date_debut").toLocalDate(),
+                        rs.getDate("date_fin").toLocalDate()
+                );
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erreur récupération remise valide : " + e.getMessage());
+        }
+
+        return null;
     }
 }

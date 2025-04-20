@@ -14,14 +14,15 @@ public class CommandeDAOImpl implements CommandeDAO {
 
     @Override
     public boolean ajouterCommande(Commande commande) {
-        String sql = "INSERT INTO commande (id_utilisateur, date_commande, statut) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO commande (id_utilisateur, montant, date_commande, statut) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = ConnexionBDD.getConnexion();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setInt(1, commande.getIdUtilisateur());
-            ps.setTimestamp(2, Timestamp.valueOf(commande.getDateCommande()));
-            ps.setString(3, commande.getStatut());
+            ps.setDouble(2, commande.getMontant());
+            ps.setTimestamp(3, Timestamp.valueOf(commande.getDateCommande()));
+            ps.setString(4, commande.getStatut());
 
             int result = ps.executeUpdate();
 
@@ -41,15 +42,16 @@ public class CommandeDAOImpl implements CommandeDAO {
 
     @Override
     public boolean modifierCommande(Commande commande) {
-        String sql = "UPDATE commande SET id_utilisateur = ?, date_commande = ?, statut = ? WHERE id = ?";
+        String sql = "UPDATE commande SET id_utilisateur = ?, montant = ?, date_commande = ?, statut = ? WHERE id = ?";
 
         try (Connection conn = ConnexionBDD.getConnexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, commande.getIdUtilisateur());
-            ps.setTimestamp(2, Timestamp.valueOf(commande.getDateCommande()));
-            ps.setString(3, commande.getStatut());
-            ps.setInt(4, commande.getId());
+            ps.setDouble(2, commande.getMontant());
+            ps.setTimestamp(3, Timestamp.valueOf(commande.getDateCommande()));
+            ps.setString(4, commande.getStatut());
+            ps.setInt(5, commande.getId());
 
             return ps.executeUpdate() > 0;
 
@@ -89,6 +91,7 @@ public class CommandeDAOImpl implements CommandeDAO {
                 return new Commande(
                         rs.getInt("id"),
                         rs.getInt("id_utilisateur"),
+                        rs.getDouble("montant"),
                         rs.getTimestamp("date_commande").toLocalDateTime(),
                         rs.getString("statut")
                 );
@@ -114,6 +117,7 @@ public class CommandeDAOImpl implements CommandeDAO {
                 Commande c = new Commande(
                         rs.getInt("id"),
                         rs.getInt("id_utilisateur"),
+                        rs.getDouble("montant"),
                         rs.getTimestamp("date_commande").toLocalDateTime(),
                         rs.getString("statut")
                 );
@@ -142,6 +146,7 @@ public class CommandeDAOImpl implements CommandeDAO {
                 Commande c = new Commande(
                         rs.getInt("id"),
                         rs.getInt("id_utilisateur"),
+                        rs.getDouble("montant"),
                         rs.getTimestamp("date_commande").toLocalDateTime(),
                         rs.getString("statut")
                 );

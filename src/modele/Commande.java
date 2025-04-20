@@ -3,28 +3,28 @@ package modele;
 import java.time.LocalDateTime;
 
 public class Commande {
-
     private int id;
     private int idUtilisateur;
-    private double totalCommande;
+    private double montant;
     private LocalDateTime dateCommande;
     private String statut;
 
-    // Constructeur
-    public Commande(int idUtilisateur, double totalCommande, LocalDateTime dateCommande, String statut) {
+    public Commande(int id, int idUtilisateur, double montant, LocalDateTime dateCommande, String statut) {
+        this.id = id;
         this.idUtilisateur = idUtilisateur;
-        this.totalCommande = totalCommande;
-        this.dateCommande = dateCommande;
-        this.statut = statut;
-    }
-    public Commande(int idUtilisateur, LocalDateTime dateCommande, String statut) {
-        this.idUtilisateur = idUtilisateur;
+        this.montant = montant;
         this.dateCommande = dateCommande;
         this.statut = statut;
     }
 
+    public Commande(int idUtilisateur, double montant, LocalDateTime dateCommande, String statut) {
+        this.idUtilisateur = idUtilisateur;
+        this.montant = montant;
+        this.dateCommande = dateCommande;
+        this.statut = statut;
+    }
 
-    // Getter pour id
+    // Getter & Setter
     public int getId() {
         return id;
     }
@@ -33,8 +33,8 @@ public class Commande {
         return idUtilisateur;
     }
 
-    public double getTotalCommande() {
-        return totalCommande;
+    public double getMontant() {
+        return montant;
     }
 
     public LocalDateTime getDateCommande() {
@@ -45,10 +45,28 @@ public class Commande {
         return statut;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setIdUtilisateur(int idUtilisateur) {
+        this.idUtilisateur = idUtilisateur;
+    }
+
+    public void setMontant(double montant) {
+        this.montant = montant;
+    }
+
+    public void setDateCommande(LocalDateTime dateCommande) {
+        this.dateCommande = dateCommande;
+    }
+
     public void setStatut(String statut) {
         this.statut = statut;
     }
-    public void setId(int id) {
-        this.id = id;
+
+    @Override
+    public String toString() {
+        return "Commande n°" + id + " - " + dateCommande + " - Montant : " + montant + "€ - Statut : " + statut;
     }
 }

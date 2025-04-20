@@ -47,7 +47,8 @@ public class FenetrePaiement extends JFrame {
         // Action bouton "Payer"
         validerButton.addActionListener(e -> {
             // Enregistrement de la commande
-            Commande commande = new Commande(idUtilisateur, LocalDateTime.now(), "terminée");
+            Commande commande = new Commande(idUtilisateur, totalCommande, LocalDateTime.now(), "terminée");
+
             CommandeDAOImpl commandeDAO = new CommandeDAOImpl();
             if (commandeDAO.ajouterCommande(commande)) {
                 LigneCommandeDAOImpl ligneDAO = new LigneCommandeDAOImpl();

@@ -41,8 +41,8 @@ public class ConnexionView extends JFrame {
         add(formPanel, BorderLayout.CENTER);
 
         btnConnexion.addActionListener(e -> {
-            String email = emailField.getText();
-            String mdp = new String(motDePasseField.getPassword());
+            String email = emailField.getText().trim();
+            String mdp = new String(motDePasseField.getPassword()).trim();
 
             UtilisateurDAOImpl utilisateurDAO = new UtilisateurDAOImpl();
             Utilisateur utilisateur = utilisateurDAO.getUtilisateurParEmailEtMotDePasse(email, mdp);
@@ -54,7 +54,8 @@ public class ConnexionView extends JFrame {
                 if (utilisateur.getRole().equalsIgnoreCase("admin")) {
                     new FenetreAdmin(utilisateur.getNom());
                 } else {
-                    new FenetreClient(utilisateur.getId());
+                    System.out.println("Connexion client réussie, ouverture FenetreClient");
+                    new FenetreClient(utilisateur.getId()).setVisible(true);
                 }
 
             } else {
