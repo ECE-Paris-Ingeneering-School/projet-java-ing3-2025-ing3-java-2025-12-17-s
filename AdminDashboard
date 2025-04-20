@@ -1,0 +1,52 @@
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+
+public class AdminDashboard extends JFrame {
+
+    private JTable commandesTable;
+
+    public AdminDashboard() {
+        setTitle("Interface Administrateur - Dashboard");
+        setSize(900, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        // Création du composant onglets
+        JTabbedPane tabs = new JTabbedPane();
+
+        // Onglet 1 : Commandes
+        tabs.add("Commandes", createCommandesPanel());
+
+        // Onglet 2 : Statistiques
+        tabs.add("Statistiques", new ChartGenerator());
+
+        setContentPane(tabs);
+    }
+
+    private JPanel createCommandesPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+
+        // Exemple de données statiques - à remplacer plus tard par DAO
+        String[] columnNames = {"ID Commande", "Client", "Date", "Total (€)"};
+        Object[][] data = {
+                {101, "Alice", "2025-03-20", 52.0},
+                {102, "Bob", "2025-03-21", 18.5},
+                {103, "Claire", "2025-03-22", 74.3},
+        };
+
+        commandesTable = new JTable(new DefaultTableModel(data, columnNames));
+        JScrollPane scrollPane = new JScrollPane(commandesTable);
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        return panel;
+    }
+
+    // Méthode principale pour tester
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            AdminDashboard dashboard = new AdminDashboard();
+            dashboard.setVisible(true);
+        });
+    }
+}
