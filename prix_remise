@@ -1,0 +1,24 @@
+// Fichier : utils/PrixCalculator.java
+package utils;
+
+public class PrixCalculator {
+
+    /**
+     * Calcule le prix total en tenant compte du prix en vrac si applicable.
+     *
+     * @param quantite           quantité commandée
+     * @param prixUnitaire       prix à l'unité
+     * @param prixVrac           prix pour un pack vrac
+     * @param quantiteVrac       nombre d’articles requis pour le prix vrac
+     * @return prix total
+     */
+    public static double calculerPrixTotal(int quantite, double prixUnitaire, Double prixVrac, Integer quantiteVrac) {
+        if (prixVrac != null && quantiteVrac != null && quantite >= quantiteVrac) {
+            int nbVrac = quantite / quantiteVrac;
+            int reste = quantite % quantiteVrac;
+            return nbVrac * prixVrac + reste * prixUnitaire;
+        } else {
+            return quantite * prixUnitaire;
+        }
+    }
+}
