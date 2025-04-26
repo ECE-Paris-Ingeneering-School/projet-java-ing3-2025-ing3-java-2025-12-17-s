@@ -7,10 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implémentation des méthodes DAO pour les utilisateurs
+ * Implémentation DAO pour la gestion des utilisateurs.
+ * <p>
+ * Permet d'ajouter, modifier, supprimer, rechercher des utilisateurs
+ * par ID, par email/mot de passe et de récupérer tous les utilisateurs.
  */
 public class UtilisateurDAOImpl implements UtilisateurDAO {
 
+    /**
+     * Ajoute un nouvel utilisateur à la base de données.
+     *
+     * @param utilisateur l'utilisateur à ajouter
+     * @return true si l'ajout a réussi, false sinon
+     */
     @Override
     public boolean ajouterUtilisateur(Utilisateur utilisateur) {
         String sql = "INSERT INTO utilisateur (nom, prenom, email, motDePasse, role) VALUES (?, ?, ?, ?, ?)";
@@ -31,6 +40,12 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         }
     }
 
+    /**
+     * Récupère un utilisateur par son identifiant.
+     *
+     * @param id l'identifiant de l'utilisateur
+     * @return l'utilisateur correspondant ou null s'il n'existe pas
+     */
     @Override
     public Utilisateur getUtilisateurParId(int id) {
         String sql = "SELECT * FROM utilisateur WHERE id = ?";
@@ -57,6 +72,13 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         return null;
     }
 
+    /**
+     * Récupère un utilisateur par son email et son mot de passe.
+     *
+     * @param email      l'email de l'utilisateur
+     * @param motDePasse le mot de passe de l'utilisateur
+     * @return l'utilisateur correspondant ou null si les informations sont incorrectes
+     */
     @Override
     public Utilisateur getUtilisateurParEmailEtMotDePasse(String email, String motDePasse) {
         String sql = "SELECT * FROM utilisateur WHERE email = ? AND motDePasse = ?";
@@ -84,6 +106,11 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         return null;
     }
 
+    /**
+     * Récupère la liste de tous les utilisateurs de la base de données.
+     *
+     * @return la liste des utilisateurs
+     */
     @Override
     public List<Utilisateur> getTousLesUtilisateurs() {
         List<Utilisateur> liste = new ArrayList<>();
@@ -111,6 +138,12 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         return liste;
     }
 
+    /**
+     * Supprime un utilisateur de la base de données par son identifiant.
+     *
+     * @param id l'identifiant de l'utilisateur à supprimer
+     * @return true si la suppression a réussi, false sinon
+     */
     @Override
     public boolean supprimerUtilisateur(int id) {
         String sql = "DELETE FROM utilisateur WHERE id = ?";
@@ -126,6 +159,12 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         }
     }
 
+    /**
+     * Modifie les informations d'un utilisateur existant.
+     *
+     * @param utilisateur l'utilisateur avec les nouvelles informations
+     * @return true si la modification a réussi, false sinon
+     */
     @Override
     public boolean modifierUtilisateur(Utilisateur utilisateur) {
         String sql = "UPDATE utilisateur SET nom = ?, prenom = ?, email = ?, motDePasse = ?, role = ? WHERE id = ?";

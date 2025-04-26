@@ -75,7 +75,7 @@ public class ValidationCommandeView extends JFrame {
                     try {
                         double prix = article.getPrixUnitaire();
 
-                        // 🔥 Appliquer prix vrac si besoin
+                        //  Appliquer prix vrac si besoin
                         if (article.getQuantite() >= article.getQuantiteVrac()) {
                             prix = article.getPrixVrac();
                         }
@@ -87,7 +87,7 @@ public class ValidationCommandeView extends JFrame {
                     }
                 }
 
-                // 🔥 Vider le panier après validation
+                //  Vider le panier après validation
                 panierDAO.viderPanier(idUtilisateur);
 
                 JOptionPane.showMessageDialog(this, "Commande validée avec succès !");

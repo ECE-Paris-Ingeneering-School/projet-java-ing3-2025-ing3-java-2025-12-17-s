@@ -7,10 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implémentation DAO pour les lignes de commande
+ * Implémentation DAO pour la gestion des lignes de commande.
+ * <p>
+ * Cette classe permet d'ajouter, supprimer et récupérer les lignes de commande
+ * associées aux commandes passées par les utilisateurs.
  */
 public class LigneCommandeDAOImpl implements LigneCommandeDAO {
 
+    /**
+     * Ajoute une ligne de commande dans la base de données.
+     *
+     * @param ligne la ligne de commande à ajouter
+     * @return true si l'ajout a réussi, false sinon
+     */
     @Override
     public boolean ajouterLigneCommande(LigneCommande ligne) {
         String sql = "INSERT INTO ligne_commande (id_commande, id_article, quantite) VALUES (?, ?, ?)";
@@ -30,6 +39,13 @@ public class LigneCommandeDAOImpl implements LigneCommandeDAO {
         }
     }
 
+    /**
+     * Supprime une ligne de commande spécifique (par commande et article).
+     *
+     * @param idCommande l'identifiant de la commande
+     * @param idArticle l'identifiant de l'article
+     * @return true si la suppression a réussi, false sinon
+     */
     @Override
     public boolean supprimerLigneCommande(int idCommande, int idArticle) {
         String sql = "DELETE FROM ligne_commande WHERE id_commande = ? AND id_article = ?";
@@ -48,6 +64,12 @@ public class LigneCommandeDAOImpl implements LigneCommandeDAO {
         }
     }
 
+    /**
+     * Récupère toutes les lignes de commande associées à une commande spécifique.
+     *
+     * @param idCommande l'identifiant de la commande
+     * @return une liste de lignes de commande
+     */
     @Override
     public List<LigneCommande> getLignesParCommande(int idCommande) {
         List<LigneCommande> lignes = new ArrayList<>();
@@ -75,6 +97,12 @@ public class LigneCommandeDAOImpl implements LigneCommandeDAO {
         return lignes;
     }
 
+    /**
+     * Supprime toutes les lignes associées à une commande spécifique.
+     *
+     * @param idCommande l'identifiant de la commande
+     * @return true si la suppression a réussi, false sinon
+     */
     @Override
     public boolean supprimerLignesParCommande(int idCommande) {
         String sql = "DELETE FROM ligne_commande WHERE id_commande = ?";
@@ -91,6 +119,11 @@ public class LigneCommandeDAOImpl implements LigneCommandeDAO {
         }
     }
 
+    /**
+     * Récupère toutes les lignes de commande présentes dans la base de données.
+     *
+     * @return une liste de toutes les lignes de commande
+     */
     @Override
     public List<LigneCommande> getToutesLesLignesCommandes() {
         List<LigneCommande> lignes = new ArrayList<>();

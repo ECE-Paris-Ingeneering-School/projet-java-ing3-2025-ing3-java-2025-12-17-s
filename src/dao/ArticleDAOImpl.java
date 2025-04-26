@@ -7,10 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implémentation DAO pour la gestion des articles
+ * Implémentation DAO pour la gestion des articles dans la base de données.
+ * <p>
+ * Cette classe fournit les opérations CRUD (Create, Read, Update, Delete)
+ * pour les objets {@link Article} en utilisant JDBC.
  */
 public class ArticleDAOImpl implements ArticleDAO {
 
+    /**
+     * Ajoute un nouvel article à la base de données.
+     *
+     * @param article l'article à ajouter
+     * @return true si l'ajout a réussi, false sinon
+     */
     @Override
     public boolean ajouterArticle(Article article) {
         String sql = "INSERT INTO article (nom, marque, prixUnitaire, prixVrac, quantiteVrac, stock) VALUES (?, ?, ?, ?, ?, ?)";
@@ -33,6 +42,12 @@ public class ArticleDAOImpl implements ArticleDAO {
         }
     }
 
+    /**
+     * Modifie un article existant dans la base de données.
+     *
+     * @param article l'article avec les nouvelles informations
+     * @return true si la modification a réussi, false sinon
+     */
     @Override
     public boolean modifierArticle(Article article) {
         String sql = "UPDATE article SET nom = ?, marque = ?, prixUnitaire = ?, prixVrac = ?, quantiteVrac = ?, stock = ? WHERE id = ?";
@@ -56,6 +71,12 @@ public class ArticleDAOImpl implements ArticleDAO {
         }
     }
 
+    /**
+     * Supprime un article de la base de données à partir de son identifiant.
+     *
+     * @param id l'identifiant de l'article à supprimer
+     * @return true si la suppression a réussi, false sinon
+     */
     @Override
     public boolean supprimerArticle(int id) {
         String sql = "DELETE FROM article WHERE id = ?";
@@ -72,6 +93,12 @@ public class ArticleDAOImpl implements ArticleDAO {
         }
     }
 
+    /**
+     * Récupère un article à partir de son identifiant.
+     *
+     * @param id l'identifiant de l'article
+     * @return l'article correspondant ou null si non trouvé
+     */
     @Override
     public Article getArticleParId(int id) {
         String sql = "SELECT * FROM article WHERE id = ?";
@@ -100,6 +127,11 @@ public class ArticleDAOImpl implements ArticleDAO {
         return null;
     }
 
+    /**
+     * Récupère tous les articles présents dans la base de données.
+     *
+     * @return une liste d'articles
+     */
     @Override
     public List<Article> getTousLesArticles() {
         List<Article> liste = new ArrayList<>();

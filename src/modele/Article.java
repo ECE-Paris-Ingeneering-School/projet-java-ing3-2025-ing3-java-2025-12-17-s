@@ -13,7 +13,7 @@ public class Article {
     private int quantiteVrac;
     private int stock;
 
-    private int quantite; // utilisé pour le panier
+    private int quantite;
 
     // Constructeur complet (avec ID)
     public Article(int id, String nom, String marque, double prixUnitaire, double prixVrac, int quantiteVrac, int stock) {
@@ -36,7 +36,7 @@ public class Article {
         this.stock = stock;
     }
 
-    // ✅ Constructeur pour PanierDAOImpl : utilisé pour récupérer un article avec tous ses attributs (version requise dans l’erreur)
+    // Constructeur pour PanierDAOImpl : utilisé pour récupérer un article avec tous ses attributs (version requise dans l’erreur)
     public Article(int id, String nom, double prixUnitaire, String marque, int stock, String description) {
         this.id = id;
         this.nom = nom;
@@ -46,7 +46,7 @@ public class Article {
         this.description = description;
     }
 
-    // Constructeur pour le panier (utilisé précédemment)
+    // Constructeur pour le panier
     public Article(int id, String nom, String description, String marque, double prixUnitaire, int stock) {
         this.id = id;
         this.nom = nom;

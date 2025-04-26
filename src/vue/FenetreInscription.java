@@ -22,15 +22,20 @@ public class FenetreInscription extends JFrame {
     private JButton retourButton;
     private UtilisateurDAO utilisateurDAO;
 
+    /**
+     * Constructeur : initialise la fenêtre d'inscription.
+     */
     public FenetreInscription() {
         super("Inscription Client");
         utilisateurDAO = new UtilisateurDAOImpl();
 
-        // Création des composants
+        // Création des champs de saisie
         nomField = new JTextField(20);
         prenomField = new JTextField(20);
         emailField = new JTextField(20);
         motDePasseField = new JPasswordField(20);
+
+        // Boutons
         inscrireButton = new JButton("S'inscrire");
         retourButton = new JButton("Retour à la connexion");
 
@@ -60,11 +65,11 @@ public class FenetreInscription extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                new ConnexionView(); // Retour à la fenêtre de connexion
+                new ConnexionView();
             }
         });
 
-        // Paramètres fenêtre
+        // Paramètres de la fenêtre
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(400, 300);
         setLocationRelativeTo(null);
@@ -72,7 +77,8 @@ public class FenetreInscription extends JFrame {
     }
 
     /**
-     * Inscrit un nouveau client en base de données.
+     * Inscription d'un nouveau client.
+     * Vérifie que tous les champs sont remplis, puis enregistre en base.
      */
     private void inscrireClient() {
         String nom = nomField.getText();
@@ -85,7 +91,7 @@ public class FenetreInscription extends JFrame {
             return;
         }
 
-        // Création d'un nouvel utilisateur
+        // Création de l'utilisateur
         Utilisateur nouvelUtilisateur = new Utilisateur();
         nouvelUtilisateur.setNom(nom);
         nouvelUtilisateur.setPrenom(prenom);
@@ -93,7 +99,7 @@ public class FenetreInscription extends JFrame {
         nouvelUtilisateur.setMotDePasse(motDePasse);
         nouvelUtilisateur.setRole("client");
 
-        // Enregistrement en base de données
+        // Ajout en base de données
         boolean success = utilisateurDAO.ajouterUtilisateur(nouvelUtilisateur);
         if (success) {
             JOptionPane.showMessageDialog(this, "Inscription réussie ! Vous pouvez vous connecter.");

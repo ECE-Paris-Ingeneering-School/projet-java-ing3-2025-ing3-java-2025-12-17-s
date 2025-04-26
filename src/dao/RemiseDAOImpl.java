@@ -8,10 +8,19 @@ import java.util.List;
 import java.time.LocalDate;
 
 /**
- * Implémentation DAO pour la gestion des remises
+ * Implémentation DAO pour la gestion des remises promotionnelles.
+ * <p>
+ * Permet d'ajouter, modifier, supprimer et rechercher des remises
+ * appliquées aux articles de la boutique.
  */
 public class RemiseDAOImpl implements RemiseDAO {
 
+    /**
+     * Ajoute une nouvelle remise à la base de données.
+     *
+     * @param remise la remise à ajouter
+     * @return true si l'ajout a réussi, false sinon
+     */
     @Override
     public boolean ajouterRemise(Remise remise) {
         String sql = "INSERT INTO remise (id_article, code, pourcentage, date_debut, date_fin) VALUES (?, ?, ?, ?, ?)";
@@ -33,6 +42,12 @@ public class RemiseDAOImpl implements RemiseDAO {
         }
     }
 
+    /**
+     * Modifie une remise existante.
+     *
+     * @param remise la remise à modifier
+     * @return true si la modification a réussi, false sinon
+     */
     @Override
     public boolean modifierRemise(Remise remise) {
         String sql = "UPDATE remise SET id_article = ?, code = ?, pourcentage = ?, date_debut = ?, date_fin = ? WHERE id = ?";
@@ -55,6 +70,12 @@ public class RemiseDAOImpl implements RemiseDAO {
         }
     }
 
+    /**
+     * Supprime une remise de la base de données.
+     *
+     * @param id l'identifiant de la remise à supprimer
+     * @return true si la suppression a réussi, false sinon
+     */
     @Override
     public boolean supprimerRemise(int id) {
         String sql = "DELETE FROM remise WHERE id = ?";
@@ -71,6 +92,12 @@ public class RemiseDAOImpl implements RemiseDAO {
         }
     }
 
+    /**
+     * Récupère une remise par son identifiant.
+     *
+     * @param id l'identifiant de la remise
+     * @return la remise correspondante, ou null si non trouvée
+     */
     @Override
     public Remise getRemiseParId(int id) {
         String sql = "SELECT * FROM remise WHERE id = ?";
@@ -98,6 +125,11 @@ public class RemiseDAOImpl implements RemiseDAO {
         return null;
     }
 
+    /**
+     * Récupère toutes les remises existantes.
+     *
+     * @return une liste de toutes les remises
+     */
     @Override
     public List<Remise> getToutesLesRemises() {
         List<Remise> liste = new ArrayList<>();
@@ -126,6 +158,12 @@ public class RemiseDAOImpl implements RemiseDAO {
         return liste;
     }
 
+    /**
+     * Récupère toutes les remises appliquées à un article spécifique.
+     *
+     * @param idArticle l'identifiant de l'article
+     * @return une liste des remises associées
+     */
     @Override
     public List<Remise> getRemisesParArticle(int idArticle) {
         List<Remise> remises = new ArrayList<>();
@@ -156,6 +194,12 @@ public class RemiseDAOImpl implements RemiseDAO {
         return remises;
     }
 
+    /**
+     * Récupère une remise spécifique grâce à son code.
+     *
+     * @param code le code promotionnel
+     * @return la remise correspondante, ou null si non trouvée
+     */
     @Override
     public Remise getRemiseParCode(String code) {
         String sql = "SELECT * FROM remise WHERE code = ?";
@@ -184,10 +228,16 @@ public class RemiseDAOImpl implements RemiseDAO {
         return null;
     }
 
-    // ✅ AJOUT : méthode pour vérification d’un code promo valide
+    /**
+     * Vérifie si un code promo est encore valide à la date actuelle.
+     *
+     * @param code le code promotionnel à vérifier
+     * @return la remise si elle est valide, null sinon
+     */
     @Override
     public Remise getRemiseValide(String code) {
         String sql = "SELECT * FROM remise WHERE code = ? AND date_fin >= ?";
+
         try (Connection conn = ConnexionBDD.getConnexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 

@@ -8,10 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implémentation DAO pour les commandes
+ * Implémentation DAO pour la gestion des commandes.
+ * <p>
+ * Cette classe permet d'ajouter, modifier, supprimer et récupérer des commandes
+ * passées par les utilisateurs dans la base de données.
  */
 public class CommandeDAOImpl implements CommandeDAO {
 
+    /**
+     * Ajoute une nouvelle commande à la base de données.
+     * Récupère l'identifiant généré pour la commande.
+     *
+     * @param commande la commande à ajouter
+     * @return true si l'ajout a réussi, false sinon
+     */
     @Override
     public boolean ajouterCommande(Commande commande) {
         String sql = "INSERT INTO commande (id_utilisateur, montant, date_commande, statut) VALUES (?, ?, ?, ?)";
@@ -40,6 +50,12 @@ public class CommandeDAOImpl implements CommandeDAO {
         }
     }
 
+    /**
+     * Modifie une commande existante dans la base de données.
+     *
+     * @param commande la commande à modifier
+     * @return true si la modification a réussi, false sinon
+     */
     @Override
     public boolean modifierCommande(Commande commande) {
         String sql = "UPDATE commande SET id_utilisateur = ?, montant = ?, date_commande = ?, statut = ? WHERE id = ?";
@@ -61,6 +77,12 @@ public class CommandeDAOImpl implements CommandeDAO {
         }
     }
 
+    /**
+     * Supprime une commande de la base de données.
+     *
+     * @param id l'identifiant de la commande à supprimer
+     * @return true si la suppression a réussi, false sinon
+     */
     @Override
     public boolean supprimerCommande(int id) {
         String sql = "DELETE FROM commande WHERE id = ?";
@@ -77,6 +99,12 @@ public class CommandeDAOImpl implements CommandeDAO {
         }
     }
 
+    /**
+     * Récupère une commande par son identifiant.
+     *
+     * @param id l'identifiant de la commande
+     * @return la commande correspondante, ou null si non trouvée
+     */
     @Override
     public Commande getCommandeParId(int id) {
         String sql = "SELECT * FROM commande WHERE id = ?";
@@ -104,6 +132,11 @@ public class CommandeDAOImpl implements CommandeDAO {
         return null;
     }
 
+    /**
+     * Récupère toutes les commandes présentes dans la base de données.
+     *
+     * @return une liste de toutes les commandes
+     */
     @Override
     public List<Commande> getToutesLesCommandes() {
         List<Commande> liste = new ArrayList<>();
@@ -131,6 +164,12 @@ public class CommandeDAOImpl implements CommandeDAO {
         return liste;
     }
 
+    /**
+     * Récupère toutes les commandes passées par un utilisateur spécifique.
+     *
+     * @param idUtilisateur l'identifiant de l'utilisateur
+     * @return une liste des commandes passées par cet utilisateur
+     */
     @Override
     public List<Commande> getCommandesParUtilisateur(int idUtilisateur) {
         List<Commande> liste = new ArrayList<>();
