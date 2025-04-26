@@ -6,6 +6,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implémentation du DAO pour gérer les opérations du panier :
+ * ajout, suppression, récupération des articles et vidage du panier.
+ */
 public class PanierDAOImpl implements PanierDAO {
 
     @Override
@@ -46,8 +50,8 @@ public class PanierDAOImpl implements PanierDAO {
     public boolean supprimerDuPanier(int idClient, int idArticle) {
         String sql = "DELETE FROM panier WHERE id_client = ? AND id_article = ?";
 
-        try (Connection conn = ConnexionBDD.getConnexion()) {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        try (Connection conn = ConnexionBDD.getConnexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idClient);
             ps.setInt(2, idArticle);
             return ps.executeUpdate() > 0;
@@ -62,8 +66,8 @@ public class PanierDAOImpl implements PanierDAO {
     public boolean viderPanier(int idClient) {
         String sql = "DELETE FROM panier WHERE id_client = ?";
 
-        try (Connection conn = ConnexionBDD.getConnexion()) {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        try (Connection conn = ConnexionBDD.getConnexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idClient);
             return ps.executeUpdate() > 0;
 
@@ -72,15 +76,21 @@ public class PanierDAOImpl implements PanierDAO {
             return false;
         }
     }
-
+    /**
+     * Récupère la liste des articles présents dans le panier d'un client.
+     *
+     * @param idClient l'identifiant du client
+     * @return la liste des articles dans le panier
+     */
     @Override
     public List<Article> getArticlesPanier(int idClient) {
         List<Article> articles = new ArrayList<>();
-        String sql = "SELECT a.id, a.nom, a.description, a.marque, a.prixUnitaire, a.stock, p.quantite " +
+        String sql = "SELECT a.id, a.nom, a.description, a.marque, a.prixUnitaire, a.prixVrac, a.quantiteVrac, a.stock, p.quantite " +
                 "FROM article a JOIN panier p ON a.id = p.id_article WHERE p.id_client = ?";
 
-        try (Connection conn = ConnexionBDD.getConnexion()) {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        try (Connection conn = ConnexionBDD.getConnexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setInt(1, idClient);
             ResultSet rs = ps.executeQuery();
 
@@ -93,6 +103,8 @@ public class PanierDAOImpl implements PanierDAO {
                         rs.getDouble("prixUnitaire"),
                         rs.getInt("stock")
                 );
+                a.setPrixVrac(rs.getDouble("prixVrac"));
+                a.setQuantiteVrac(rs.getInt("quantiteVrac"));
                 a.setQuantite(rs.getInt("quantite"));
                 articles.add(a);
             }
@@ -104,7 +116,6 @@ public class PanierDAOImpl implements PanierDAO {
         return articles;
     }
 
-    //  Nouvelle méthode : suppression d'un seul article
 
     public boolean supprimerArticleDuPanier(int idClient, int idArticle) {
         String sql = "DELETE FROM panier WHERE id_client = ? AND id_article = ?";
@@ -114,6 +125,7 @@ public class PanierDAOImpl implements PanierDAO {
             ps.setInt(1, idClient);
             ps.setInt(2, idArticle);
             return ps.executeUpdate() > 0;
+
         } catch (SQLException e) {
             System.err.println("Erreur suppression article panier : " + e.getMessage());
             return false;

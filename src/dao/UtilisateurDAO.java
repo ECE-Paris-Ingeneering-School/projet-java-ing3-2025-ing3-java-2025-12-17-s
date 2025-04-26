@@ -25,4 +25,6 @@ public interface UtilisateurDAO {
 
     // Mettre à jour un utilisateur
     boolean modifierUtilisateur(Utilisateur utilisateur);
+
+
 }

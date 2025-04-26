@@ -22,7 +22,9 @@ public class Utilisateur {
         this.motDePasse = motDePasse;
         this.role = role;
     }
-
+    public Utilisateur() {
+        // Constructeur vide nécessaire pour l'inscription
+    }
     /**
      * Constructeur sans ID (utile pour l'insertion)
      */

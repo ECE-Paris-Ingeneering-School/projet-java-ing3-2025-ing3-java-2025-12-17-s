@@ -1,11 +1,7 @@
 package vue;
 
-import dao.CommandeDAO;
-import dao.CommandeDAOImpl;
-import dao.LigneCommandeDAO;
-import dao.LigneCommandeDAOImpl;
-import dao.RemiseDAO;
-import dao.RemiseDAOImpl;
+import dao.*;
+import modele.Article;
 import modele.Commande;
 import modele.LigneCommande;
 import modele.Remise;
@@ -13,11 +9,17 @@ import modele.Remise;
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Fenêtre de validation de commande.
+ */
 public class ValidationCommandeView extends JFrame {
+
     private final double[] totalCommande = new double[1];
     private final JTextArea textArea;
+    private List<Article> articlesPanier;
 
     public ValidationCommandeView(List<String> panierArticles, double totalInitial, int idUtilisateur) {
         this.totalCommande[0] = totalInitial;
@@ -33,7 +35,7 @@ public class ValidationCommandeView extends JFrame {
         for (String ligne : panierArticles) {
             textArea.append(ligne + "\n");
         }
-        textArea.append("\nTotal : " + totalCommande[0] + " €");
+        textArea.append("\nTotal : " + String.format("%.2f", totalCommande[0]) + " €");
 
         panel.add(new JScrollPane(textArea), BorderLayout.CENTER);
 
@@ -50,13 +52,17 @@ public class ValidationCommandeView extends JFrame {
         add(panel);
         setVisible(true);
 
-        // ✅ Demander le code promo à l'ouverture
+        // Charger les articles du panier pour avoir prixVrac et quantiteVrac
+        PanierDAO panierDAO = new PanierDAOImpl();
+        articlesPanier = panierDAO.getArticlesPanier(idUtilisateur);
+
+        // À l'ouverture, proposer de saisir un code promo
         SwingUtilities.invokeLater(() -> appliquerCodePromo(panierArticles));
 
-        // ✅ Bouton "Modifier code promo"
+        // Action du bouton "Modifier code promo"
         btnAppliquer.addActionListener(e -> appliquerCodePromo(panierArticles));
 
-        // ✅ Valider la commande
+        // Action du bouton "Confirmer la commande"
         btnConfirmer.addActionListener(e -> {
             CommandeDAO commandeDAO = new CommandeDAOImpl();
             Commande commande = new Commande(idUtilisateur, totalCommande[0], LocalDateTime.now(), "en cours");
@@ -65,30 +71,36 @@ public class ValidationCommandeView extends JFrame {
                 int idCommande = commande.getId();
                 LigneCommandeDAO ligneDAO = new LigneCommandeDAOImpl();
 
-                for (String ligne : panierArticles) {
+                for (Article article : articlesPanier) {
                     try {
-                        String[] parts = ligne.split(" x");
-                        if (parts.length < 2) continue;
+                        double prix = article.getPrixUnitaire();
 
-                        int quantite = Integer.parseInt(parts[1].trim());
-                        String leftPart = parts[0]; // Ex: "Article 1 : 1,50€ - Stylo"
-                        int idArticle = Integer.parseInt(leftPart.split(":")[0].replace("Article", "").trim());
+                        // 🔥 Appliquer prix vrac si besoin
+                        if (article.getQuantite() >= article.getQuantiteVrac()) {
+                            prix = article.getPrixVrac();
+                        }
 
-                        LigneCommande ligneCommande = new LigneCommande(idCommande, idArticle, quantite);
+                        LigneCommande ligneCommande = new LigneCommande(idCommande, article.getId(), article.getQuantite());
                         ligneDAO.ajouterLigneCommande(ligneCommande);
                     } catch (Exception ex) {
-                        System.err.println("Erreur ligne commande : " + ex.getMessage());
+                        System.err.println("Erreur ajout ligne commande : " + ex.getMessage());
                     }
                 }
 
-                JOptionPane.showMessageDialog(this, "Commande validée !");
+                // 🔥 Vider le panier après validation
+                panierDAO.viderPanier(idUtilisateur);
+
+                JOptionPane.showMessageDialog(this, "Commande validée avec succès !");
                 dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Erreur lors de la validation.");
+                JOptionPane.showMessageDialog(this, "Erreur lors de la validation de la commande.", "Erreur", JOptionPane.ERROR_MESSAGE);
             }
         });
     }
 
+    /**
+     * Méthode pour appliquer un code promo saisi par l'utilisateur.
+     */
     private void appliquerCodePromo(List<String> panierArticles) {
         String code = JOptionPane.showInputDialog(this, "Entrez un code promo :");
 
@@ -100,7 +112,7 @@ public class ValidationCommandeView extends JFrame {
                 double remiseMontant = totalCommande[0] * remise.getPourcentage() / 100;
                 totalCommande[0] -= remiseMontant;
 
-                // 🔄 Mise à jour de l'affichage
+                // Mise à jour de l'affichage avec remise appliquée
                 textArea.setText("");
                 for (String ligne : panierArticles) {
                     textArea.append(ligne + "\n");
@@ -108,7 +120,7 @@ public class ValidationCommandeView extends JFrame {
                 textArea.append("\nCode promo appliqué : " + remise.getPourcentage() + "% (-" + String.format("%.2f", remiseMontant) + "€)");
                 textArea.append("\nTotal : " + String.format("%.2f", totalCommande[0]) + " €");
             } else {
-                JOptionPane.showMessageDialog(this, "Code promo invalide ou expiré.");
+                JOptionPane.showMessageDialog(this, "Code promo invalide ou expiré.", "Erreur", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

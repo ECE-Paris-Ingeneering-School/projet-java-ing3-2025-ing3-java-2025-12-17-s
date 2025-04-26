@@ -6,14 +6,19 @@ import modele.Utilisateur;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Fenêtre de connexion pour les utilisateurs
+ */
 public class ConnexionView extends JFrame {
 
     private JTextField emailField;
     private JPasswordField motDePasseField;
+    private JButton btnConnexion;
+    private JButton btnCreerCompte;
 
     public ConnexionView() {
         setTitle("Connexion");
-        setSize(400, 300);
+        setSize(400, 350);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -23,7 +28,7 @@ public class ConnexionView extends JFrame {
         titre.setHorizontalAlignment(SwingConstants.CENTER);
         add(titre, BorderLayout.NORTH);
 
-        JPanel formPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        JPanel formPanel = new JPanel(new GridLayout(4, 2, 10, 10)); // 4 lignes maintenant
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
         formPanel.add(new JLabel("Email :"));
@@ -34,12 +39,15 @@ public class ConnexionView extends JFrame {
         motDePasseField = new JPasswordField();
         formPanel.add(motDePasseField);
 
-        JButton btnConnexion = new JButton("Connexion");
-        formPanel.add(new JLabel()); // espace vide
+        btnConnexion = new JButton("Connexion");
+        btnCreerCompte = new JButton("Créer un compte");
+
         formPanel.add(btnConnexion);
+        formPanel.add(btnCreerCompte);
 
         add(formPanel, BorderLayout.CENTER);
 
+        // Action pour le bouton "Connexion"
         btnConnexion.addActionListener(e -> {
             String email = emailField.getText().trim();
             String mdp = new String(motDePasseField.getPassword()).trim();
@@ -54,13 +62,18 @@ public class ConnexionView extends JFrame {
                 if (utilisateur.getRole().equalsIgnoreCase("admin")) {
                     new FenetreAdmin(utilisateur.getNom());
                 } else {
-                    System.out.println("Connexion client réussie, ouverture FenetreClient");
                     new FenetreClient(utilisateur.getId()).setVisible(true);
                 }
 
             } else {
                 JOptionPane.showMessageDialog(this, "Identifiants incorrects", "Erreur", JOptionPane.ERROR_MESSAGE);
             }
+        });
+
+        // Action pour le bouton "Créer un compte"
+        btnCreerCompte.addActionListener(e -> {
+            dispose(); // fermer la connexion
+            new FenetreInscription(); // ouvrir l'inscription
         });
 
         setVisible(true);
