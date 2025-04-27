@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : sam. 26 avr. 2025 à 20:31
+-- Généré le : dim. 27 avr. 2025 à 09:02
 -- Version du serveur : 8.2.0
 -- Version de PHP : 8.2.13
 
@@ -38,17 +38,22 @@ CREATE TABLE IF NOT EXISTS `article` (
   `prixVrac` double DEFAULT NULL,
   `quantiteVrac` double DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `article`
 --
 
 INSERT INTO `article` (`id`, `nom`, `description`, `stock`, `marque`, `prixUnitaire`, `prixVrac`, `quantiteVrac`) VALUES
-(1, 'Stylo', 'Stylo bleu classique', 400, 'bic', 2, 1.5, 50),
-(2, 'Cahier', 'Cahier 96 pages', 475, 'Aucune', 2, 1.5, 50),
-(3, 'Clé USB', 'Clé USB 32 Go', 250, 'Aucune', 10, 8.5, 100),
-(5, 'feuilles', NULL, 450, 'oxford', 1.25, 1, 50);
+(1, 'Stylo', 'Stylo bleu classique', 1000, 'bic', 2, 1.5, 200),
+(2, 'Cahier', 'Cahier 96 pages', 1000, 'Aucune', 2, 1.5, 200),
+(3, 'Clé USB', 'Clé USB 32 Go', 1000, 'Aucune', 10, 8.5, 200),
+(5, 'Stylo à bille', 'Stylo à bille bleu', 2000, 'Parker', 2.5, 1.8, 300),
+(4, 'Carnet de notes', 'Carnet de notes 100 pages', 500, 'Leuchtturm', 5, 4, 150),
+(6, 'Tasse en céramique', 'Tasse en céramique blanche', 1500, 'IKEA', 4, 3.2, 100),
+(7, 'Clé USB 64 Go', 'Clé USB rapide 64 Go', 800, 'SanDisk', 12, 10, 180),
+(8, 'Cahier de croquis', 'Cahier de croquis pour artistes', 850, 'Moleskine', 8, 6.5, 120),
+(9, 'Pochette en cuir', 'Pochette en cuir pour documents', 700, 'Gucci', 50, 45, 80);
 
 -- --------------------------------------------------------
 
@@ -67,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `avis` (
   PRIMARY KEY (`id`),
   KEY `id_utilisateur` (`id_utilisateur`),
   KEY `id_article` (`id_article`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `avis`
@@ -76,7 +81,12 @@ CREATE TABLE IF NOT EXISTS `avis` (
 INSERT INTO `avis` (`id`, `id_utilisateur`, `id_article`, `note`, `commentaire`, `date_avis`) VALUES
 (1, 3, 2, 5, 'super top', '2025-04-26 21:32:48'),
 (2, 3, 1, 4, 'super', '2025-04-26 21:32:57'),
-(3, 2, 1, 5, 'incroyable !', '2025-04-26 21:40:59');
+(3, 2, 1, 5, 'incroyable !', '2025-04-26 21:40:59'),
+(4, 4, 3, 4, 'j\'aime bien !', '2025-04-27 10:51:40'),
+(5, 4, 7, 5, 'trop swagggg', '2025-04-27 10:54:58'),
+(6, 4, 8, 2, 'trop grand pour moi', '2025-04-27 10:55:08'),
+(7, 4, 9, 5, 'trop beau gucci', '2025-04-27 11:01:52'),
+(8, 4, 8, 5, 'je suis un artiste :)', '2025-04-27 11:02:03');
 
 -- --------------------------------------------------------
 
@@ -93,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `commande` (
   `statut` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_utilisateur` (`id_utilisateur`)
-) ENGINE=MyISAM AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `commande`
@@ -131,7 +141,10 @@ INSERT INTO `commande` (`id`, `id_utilisateur`, `montant`, `date_commande`, `sta
 (29, 3, 2306.25, '2025-04-26 20:12:22', 'en cours'),
 (30, 3, 142.5, '2025-04-26 20:33:18', 'en cours'),
 (31, 3, 9450, '2025-04-26 20:33:51', 'en cours'),
-(32, 3, 47.5, '2025-04-26 21:31:03', 'en cours');
+(32, 3, 47.5, '2025-04-26 21:31:03', 'en cours'),
+(33, 4, 765, '2025-04-27 10:51:19', 'en cours'),
+(34, 4, 33675, '2025-04-27 10:54:44', 'en cours'),
+(35, 4, 3301.25, '2025-04-27 11:01:43', 'en cours');
 
 -- --------------------------------------------------------
 
@@ -189,7 +202,12 @@ INSERT INTO `ligne_commande` (`id_commande`, `id_article`, `quantite`) VALUES
 (29, 5, 50),
 (30, 1, 100),
 (31, 6, 25),
-(32, 2, 25);
+(32, 2, 25),
+(33, 3, 100),
+(34, 7, 150),
+(34, 8, 51),
+(35, 8, 150),
+(35, 9, 50);
 
 -- --------------------------------------------------------
 
@@ -256,7 +274,7 @@ CREATE TABLE IF NOT EXISTS `utilisateur` (
   `role` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `utilisateur`
@@ -265,7 +283,8 @@ CREATE TABLE IF NOT EXISTS `utilisateur` (
 INSERT INTO `utilisateur` (`id`, `nom`, `prenom`, `email`, `motDePasse`, `role`) VALUES
 (1, 'Admin', 'Admin', 'admin@admin.com', 'admin', 'admin'),
 (2, 'Client', 'Test', 'client@test.com', 'client', 'client'),
-(3, 'Rihana', 'Nicolas', 'fosdjf@gmail.com', 'Nico', 'client');
+(3, 'Rihana', 'Nicolas', 'fosdjf@gmail.com', 'Nico', 'client'),
+(4, 'Pierre', 'paul', 'pierre@gmail.com', 'pierre', 'client');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
